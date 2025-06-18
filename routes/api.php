@@ -19,6 +19,5 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/users/{id}',  'delete');
         Route::post('/users/{id}/status',  'updateStatus');
         Route::post('/users/{id}/change-password',  'changePassword');
-        // Route::post('/users/{id}/reset-password',  'resetPassword');
     });
 });

@@ -19,8 +19,8 @@ class UserController extends Controller implements HasMiddleware
     public static function middleware(): array
     {
         return [
-            new Middleware('permission:adminList', only: ['index']),
-            new Middleware('permission:adminCreate', only: ['store']),
+            // new Middleware('permission:adminList', only: ['index']),
+            // new Middleware('permission:adminCreate', only: ['store']),
             // new Middleware('permission:adminEdit', only: ['update']),
             // new Middleware('permission:adminDelete', only: ['delete']),
             // new Middleware('permission:adminStatus', only: ['updateStatus']),
