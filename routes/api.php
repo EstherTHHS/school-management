@@ -5,10 +5,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\AdminController;
-use App\Http\Controllers\API\AssignmentController;
+use App\Http\Controllers\API\EventController;
 use App\Http\Controllers\API\SubjectController;
 use App\Http\Controllers\API\TeacherController;
 use App\Http\Controllers\API\AssignmetController;
+use App\Http\Controllers\API\AssignmentController;
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/users', [UserController::class, 'store']);
@@ -48,5 +49,16 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/submissions/{id}', 'updateSubmissionById');
         Route::get('/years/{yearId}/subjects', 'getSubjectListByYearId');
         Route::get('/submissions', 'getSubmissionList');
+    });
+    Route::controller(EventController::class)->group(function () {
+        Route::post('/events',  'storeEvent');
+        Route::get('/events', 'getEvents');
+        Route::get('/events/{id}', 'getEventById');
+        Route::delete('/events/{id}', 'deleteEventById');
+
+        Route::post('/labs',  'updateOrCreateLab');
+        Route::get('/labs', 'getLabs');
+        Route::get('/labs/{id}', 'getLabById');
+        Route::delete('/labs/{id}', 'deleteLabById');
     });
 });
