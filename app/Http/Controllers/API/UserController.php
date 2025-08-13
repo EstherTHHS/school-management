@@ -19,15 +19,13 @@ class UserController extends Controller implements HasMiddleware
     public static function middleware(): array
     {
         return [
-            // new Middleware('permission:adminList', only: ['index']),
-            // new Middleware('permission:adminCreate', only: ['store']),
-            // new Middleware('permission:adminEdit', only: ['update']),
-            // new Middleware('permission:adminDelete', only: ['delete']),
-            // new Middleware('permission:adminStatus', only: ['updateStatus']),
-            // new Middleware('permission:adminChangePassword', only: ['changePassword']),
-            // new Middleware('permission:adminResetPassword', only: ['resetPassword']),
-            // new Middleware('permission:adminShow', only: ['getById']),
-            // new Middleware('role:admin'),
+            new Middleware('permission:adminList', only: ['index']),
+            new Middleware('permission:adminCreate', only: ['store']),
+            new Middleware('permission:adminEdit', only: ['getById']),
+            new Middleware('permission:adminUpdate', only: ['update']),
+            new Middleware('permission:adminDelete', only: ['delete']),
+            new Middleware('permission:adminStatus', only: ['updateStatus']),
+            new Middleware('permission:adminChangePassword', only: ['changePassword']),
         ];
     }
 
@@ -72,11 +70,6 @@ class UserController extends Controller implements HasMiddleware
         $data = $this->adminRepository->changePassword($id, $request->all());
         ResponseData($data);
     }
-    // public function resetPassword($id, Request $request)
-    // {
-    //     $data = $this->adminRepository->resetPassword($id, $request->all());
-    //     ResponseData($data);
-    // }
 
     public function updateStatus($id)
     {

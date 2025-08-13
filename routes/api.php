@@ -10,6 +10,7 @@ use App\Http\Controllers\API\SubjectController;
 use App\Http\Controllers\API\TeacherController;
 use App\Http\Controllers\API\AssignmetController;
 use App\Http\Controllers\API\AssignmentController;
+use App\Http\Controllers\API\AttendanceController;
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/users', [UserController::class, 'store']);
@@ -60,5 +61,14 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/labs', 'getLabs');
         Route::get('/labs/{id}', 'getLabById');
         Route::delete('/labs/{id}', 'deleteLabById');
+
+        Route::get('/timetables','getTimetables');
+        Route::post('/timetables',  'updateOrCreateTimetable');
+        Route::get('/timetables/year/{yearId}', 'getTimetablesByYearId');
+        Route::get('/timetables/{id}', 'getTimetableById');
+        Route::delete('/timetables/{id}', 'deleteTimetableById');
+    });
+    Route::controller(AttendanceController::class)->group(function () {
+        Route::post('/attendances',  'storeAttendance');
     });
 });

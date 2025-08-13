@@ -9,8 +9,10 @@ use App\Repositories\Subject\SubjectRepository;
 use App\Repositories\Admin\AdminRepositoryInterface;
 use App\Repositories\Event\EventRepositoryInterface;
 use App\Repositories\Assignment\AssignmentRepository;
+use App\Repositories\Attendance\AttendanceRepository;
 use App\Repositories\Subject\SubjectRepositoryInterface;
 use App\Repositories\Assignment\AssignmentRepositoryInterface;
+use App\Repositories\Attendance\AttendanceRepositoryInterface;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -31,5 +33,6 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(SubjectRepositoryInterface::class, SubjectRepository::class);
         $this->app->bind(AssignmentRepositoryInterface::class, AssignmentRepository::class);
         $this->app->bind(EventRepositoryInterface::class, EventRepository::class);
+        $this->app->bind(AttendanceRepositoryInterface::class, AttendanceRepository::class);
     }
 }

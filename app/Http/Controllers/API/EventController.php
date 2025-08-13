@@ -52,4 +52,29 @@ class EventController extends Controller
         $lab = $this->eventRepository->deleteLabById($id);
         ResponseData($lab);
     }
+
+    public function updateOrCreateTimetable(Request $request){
+        $timetable = $this->eventRepository->updateOrCreateTimetable($request->all());
+        ResponseData($timetable);
+    }
+
+    public function getTimetablesByYearId($yearId){
+        $timetables = $this->eventRepository->getTimetablesByYearId($yearId);
+        ResponseData($timetables);
+    }
+
+    public function getTimetables(Request $request){
+        $timetables = $this->eventRepository->getTimetables($request);
+        ResponseData($timetables);
+    }
+
+    public function getTimetableById($id){
+        $timetable = $this->eventRepository->getTimetableById($id);
+        ResponseData($timetable);
+    }
+
+    public function deleteTimetableById($id){
+        $timetable = $this->eventRepository->deleteTimetableById($id);
+        ResponseData($timetable);
+    }
 }

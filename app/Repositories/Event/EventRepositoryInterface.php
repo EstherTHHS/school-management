@@ -2,6 +2,8 @@
 
 namespace App\Repositories\Event;
 
+use Illuminate\Http\Request;
+
 interface EventRepositoryInterface
 {
     public function getEvents();
@@ -12,4 +14,10 @@ interface EventRepositoryInterface
     public function getLabs();
     public function getLabById($id);
     public function deleteLabById($id);
+
+    public function updateOrCreateTimetable($data);
+    public function getTimetables(Request $request);
+    public function getTimetablesByYearId($yearId);
+    public function getTimetableById($id);
+    public function deleteTimetableById($id);
 }

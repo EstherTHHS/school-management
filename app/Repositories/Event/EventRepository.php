@@ -4,6 +4,7 @@ namespace App\Repositories\Event;
 
 use App\Models\Lab;
 use App\Models\Event;
+use App\Models\Timetable;
 use Illuminate\Support\Facades\DB;
 
 
@@ -82,5 +83,40 @@ class EventRepository implements EventRepositoryInterface
         $lab = Lab::findOrFail($id);
         $lab->clearMediaCollection('lab');
         $lab->delete();
+    }
+
+    public function updateOrCreateTimetable($data)
+    {
+        DB::beginTransaction();
+        try {
+            $timetable = Timetable::updateOrCreate(['id' => $data['id'] ?? null], $data);
+            DB::commit();
+            return $timetable;
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            ResponseMessage($th->getMessage(), 402);
+            throw $th;
+        }
+    }
+
+    public function getTimetables($request)
+    {
+        return Timetable::with(['year', 'subject'])->orderBy('id', 'desc')->paginate(config('common.list_count'));
+    }
+
+    public function getTimetablesByYearId($yearId)
+    {
+        return Timetable::with(['year', 'subject'])->where('year_id', $yearId)->orderBy('id', 'desc')->paginate(config('common.list_count'));
+    }
+
+    public function getTimetableById($id)
+    {
+        return Timetable::with(['year', 'subject'])->findOrFail($id);
+    }
+
+    public function deleteTimetableById($id)
+    {
+        $timetable = Timetable::findOrFail($id);
+        $timetable->delete();
     }
 }

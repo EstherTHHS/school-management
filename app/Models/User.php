@@ -34,7 +34,6 @@ class User extends Authenticatable
         'is_active',
         'image_path',
         'image_url',
-        'year_id',
         'enrollment_id',
         'remember_token',
     ];
@@ -70,5 +69,10 @@ class User extends Authenticatable
     public function subjects()
     {
         return $this->belongsToMany(Subject::class, 'teacher_subjects', 'teacher_id', 'subject_id');
+    }
+
+    public function getAuthPassword()
+    {
+        return $this->password;
     }
 }

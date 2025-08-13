@@ -4,6 +4,7 @@ namespace App\Actions\Auth;
 
 use App\Models\Admin;
 use App\Models\Teacher;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 
 class APILoginAction
@@ -34,13 +35,12 @@ class APILoginAction
 
         if (!isset($user)) {
             $login_response["message"] = "User not found";
-
             return $login_response;
         }
-
-        if (!Hash::check($this->password, $user->getAuthPassword())) {
+        if (!Hash::check($this->password, $user->password)) {
+            Log::info('Attempted password: ' . $this->password);  // Log the attempted password
+            Log::info('Stored password: ' . $user->password);     // Log the stored hashed password
             $login_response["message"] = "Password not match";
-
             return $login_response;
         }
 
@@ -70,7 +70,6 @@ class APILoginAction
         $login_response["roles"] = $user->getRoleNames();
         $login_response["permissions"] = $user->getAllPermissions()->pluck('name');
         $login_response["message"] = 'Authenticated';
-
         return $login_response;
     }
 }
