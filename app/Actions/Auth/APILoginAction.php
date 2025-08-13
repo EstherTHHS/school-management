@@ -16,6 +16,7 @@ class APILoginAction
     private $identity;
     private $password;
     private $credential_type;
+
     public function __construct(string $credential_name, string $identity, string $password, string $credential_type)
     {
         $this->credential_name = $credential_name;
@@ -23,9 +24,11 @@ class APILoginAction
         $this->password = $password;
         $this->credential_type = $credential_type;
     }
+
     public function run(string $token_name, array $abilities = []): array
     {
         $user = $this->credential_type::where($this->credential_name, $this->identity)->first();
+
         $login_response = [
             "token" => null,
             "code" => 401,
@@ -37,9 +40,7 @@ class APILoginAction
             $login_response["message"] = "User not found";
             return $login_response;
         }
-        if (!Hash::check($this->password, $user->password)) {
-            Log::info('Attempted password: ' . $this->password);  // Log the attempted password
-            Log::info('Stored password: ' . $user->password);     // Log the stored hashed password
+        if (!Hash::check($this->password, $user->password)) {   
             $login_response["message"] = "Password not match";
             return $login_response;
         }

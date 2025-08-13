@@ -14,6 +14,7 @@ use App\Http\Controllers\API\AttendanceController;
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/users', [UserController::class, 'store']);
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 

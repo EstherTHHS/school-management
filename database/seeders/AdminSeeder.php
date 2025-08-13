@@ -37,7 +37,7 @@ class AdminSeeder extends Seeder
             'name' => 'student',
             'email' => 'studnet@example.com',
             'phone' => '0933',
-            'password' => Hash::make('3333'),
+            'password' => Hash::make('password'),
             'is_active' => 1,
             ]);
         $user3->assignRole('student');
