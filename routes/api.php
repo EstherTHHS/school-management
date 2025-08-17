@@ -42,15 +42,20 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/assignments',  'storeAssignment');
         Route::get('/teachers',  'getTeachers');
         Route::get('/students',  'getStudents');
-        Route::get('/year-subjects',  'getYearSubjects');
+        Route::get('/teacher-subjects/{teacher_id}',  'getTeacherYearSubjects');
+
         Route::get('/assignments/{id}',  'getAssignmentById');
-        Route::post('/assignment-category', 'storeAssignmentCategory');
+        Route::post('/assignment-categories', 'storeAssignmentCategory');
         Route::get('/assignment-categories', 'getAssignmentCategories');
+        Route::get('/assignment-categories/{id}', 'getAssignmentCategoryById');
         Route::get('/delete-assignment-file/{id}', 'deleteAssignmentFile');
+        
+        Route::get('/years/{yearId}/subjects', 'getSubjectListByYearId');
+
         Route::post('/submissions', 'storeSubmission');
         Route::post('/submissions/{id}', 'updateSubmissionById');
-        Route::get('/years/{yearId}/subjects', 'getSubjectListByYearId');
         Route::get('/submissions', 'getSubmissionList');
+        Route::get('/submissions/{id}', 'getSubmissionById');
     });
     Route::controller(EventController::class)->group(function () {
         Route::post('/events',  'storeEvent');

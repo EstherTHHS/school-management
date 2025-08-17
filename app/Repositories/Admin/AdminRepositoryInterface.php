@@ -5,7 +5,7 @@ namespace App\Repositories\Admin;
 interface AdminRepositoryInterface
 {
 
-    public function getAll();
+    public function getAll($request);
     public function getById($id);
     public function create(array $data);
     public function update($id, array $data);

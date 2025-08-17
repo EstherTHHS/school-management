@@ -8,23 +8,24 @@ use App\Models\Submission;
 use App\Models\YearSubject;
 use App\Models\TeacherSubject;
 use App\Models\AssignmentCategory;
+use App\Models\Year;
 use Illuminate\Support\Facades\DB;
 
 class AssignmentRepository implements AssignmentRepositoryInterface
 {
    public function getTeachers()
    {
-      return User::role('teacher')->orderBy('id', 'desc')->get();
+      return User::role('teacher')->orderBy('id', 'desc')->paginate(config('common.list_count'));
    }
 
    public function getStudents()
    {
-      return User::role('student')->orderBy('id', 'desc')->get();
+      return User::role('student')->orderBy('id', 'desc')->paginate(config('common.list_count'));
    }
 
-   public function getYearSubjects($request)
+   public function getTeacherYearSubjects($teacher_id)
    {
-      return TeacherSubject::with('yearSubject.year', 'yearSubject.subject', 'teacher')->where('teacher_id', $request->teacher_id)->paginate(config('common.list_count'));
+      return TeacherSubject::with('yearSubject.year', 'yearSubject.subject', 'teacher')->where('teacher_id', $teacher_id)->paginate(config('common.list_count'));
    }
 
    public function getAssignments()
@@ -81,6 +82,10 @@ class AssignmentRepository implements AssignmentRepositoryInterface
    }
    public function getAssignmentCategories(){
       return AssignmentCategory::orderBy('id', 'desc')->get();
+   }
+
+   public function getAssignmentCategoryById($id){
+      return AssignmentCategory::findOrFail($id);
    }
 
    public function deleteAssignmentFile($id)
@@ -163,5 +168,18 @@ class AssignmentRepository implements AssignmentRepositoryInterface
       }
       return $submission->paginate(config('common.list_count'));
    }
-   
+
+   public function getSubmissionById($id)
+   {
+      return Submission::with(
+         ['assignment.assignmentCategory',
+         'assignment.subject',
+         'assignment.subject.years',
+         'student',
+         'gradedBy',
+         'assignment.teacher',
+         'assignment.media',
+         'media'])
+      ->findOrFail($id);
+   }
 }

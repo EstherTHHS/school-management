@@ -33,8 +33,8 @@ class AssignmentController extends Controller
         ResponseData($students);
     }
 
-    public function getYearSubjects(Request $request){
-        $yearSubjects = $this->assignmentRepository->getYearSubjects($request);
+    public function getTeacherYearSubjects($teacher_id){
+        $yearSubjects = $this->assignmentRepository->getTeacherYearSubjects($teacher_id);
         ResponseData($yearSubjects);
     }
 
@@ -51,6 +51,11 @@ class AssignmentController extends Controller
     public function getAssignmentCategories(){
         $assignmentCategories = $this->assignmentRepository->getAssignmentCategories();
         ResponseData($assignmentCategories);
+    }
+
+    public function getAssignmentCategoryById($id){
+        $assignmentCategory = $this->assignmentRepository->getAssignmentCategoryById($id);
+        ResponseData($assignmentCategory);
     }
 
     public function deleteAssignmentFile($id){
@@ -73,5 +78,10 @@ class AssignmentController extends Controller
     public function getSubmissionList(Request $request){
         $submissionList = $this->assignmentRepository->getSubmissionList($request);
         ResponseData($submissionList);
+    }
+
+    public function getSubmissionById($id){
+        $submission = $this->assignmentRepository->getSubmissionById($id);
+        ResponseData($submission);
     }
 }
