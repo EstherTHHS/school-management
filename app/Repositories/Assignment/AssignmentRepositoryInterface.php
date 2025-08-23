@@ -22,4 +22,7 @@ interface AssignmentRepositoryInterface
     public function getSubjectListByYearId($yearId);
     public function getSubmissionList(Request $request);
     public function getSubmissionById($id);
+
+    public function getAssignmentsByTeacherId();
+    public function getAssignmentsByStudentId();
 }

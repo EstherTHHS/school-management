@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\StudentYear;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Traits\HasRoles;
@@ -74,4 +75,10 @@ class User extends Authenticatable
     {
         return $this->password;
     }
+
+    public function studentYears()
+    {
+        return $this->hasMany(StudentYear::class , 'student_id', 'id');
+    }
 }
+

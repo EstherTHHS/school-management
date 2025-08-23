@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\UserRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\AdminRequest;
-use App\Repositories\Admin\AdminRepositoryInterface;
-use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use App\Repositories\Admin\AdminRepositoryInterface;
 
 class UserController extends Controller implements HasMiddleware
 {
@@ -35,7 +36,7 @@ class UserController extends Controller implements HasMiddleware
         $data = $this->adminRepository->getAll($request);
         ResponseData($data);
     }
-    public function store(AdminRequest $request)
+    public function store(UserRequest $request)
     {
         $validatedData = $request->validated();
         if ($request->hasFile('user_image')) {
@@ -55,6 +56,11 @@ class UserController extends Controller implements HasMiddleware
     }
     public function update($id, Request $request)
     {
+        if ($request->hasFile('user_image')) {
+            $uploadedFile = UploadFileToServer($request, 'user_image', 'user_images');
+            $validatedData['image_url'] = $uploadedFile['file_url'];
+            $validatedData['image_path'] = $uploadedFile['file_path'];
+        }
         $data = $this->adminRepository->update($id, $request->all());
         ResponseData($data);
     }

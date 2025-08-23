@@ -4,6 +4,7 @@ namespace App\Repositories\Admin;
 
 use App\Models\User;
 use App\Models\Admin;
+use App\Models\StudentYear;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Contracts\Role;
@@ -38,6 +39,14 @@ class AdminRepository implements AdminRepositoryInterface
         try {
             $user = User::create($data);
             $user->assignRole($data['role'] ?? 'admin');
+            if($data['role'] == "student") {
+                StudentYear::updateOrCreate([
+                    'student_id' => $user->id,
+                    'year_id' => $data['year_id']
+                ], [
+                    'year_id' => $data['year_id']
+                ]);
+            }
             DB::commit();
             ResponseData($user);
         } catch (\Exception $e) {
@@ -58,6 +67,14 @@ class AdminRepository implements AdminRepositoryInterface
             $user->update($data);
             if (isset($data['role']) && $data['role'] !== null) {
                 $user->syncRoles($data['role']);
+            }
+            if($data['role'] == "student") {
+                StudentYear::updateOrCreate([
+                    'student_id' => $user->id,
+                    'year_id' => $data['year_id']
+                ], [
+                    'year_id' => $data['year_id']
+                ]);
             }
             DB::commit();
             ResponseData($user);

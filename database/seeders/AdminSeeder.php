@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use App\Models\Admin;
+use App\Models\StudentYear;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -37,9 +38,14 @@ class AdminSeeder extends Seeder
             'name' => 'student',
             'email' => 'studnet@example.com',
             'phone' => '0933',
-            'password' => Hash::make('password'),
+            'password' => 'password',
             'is_active' => 1,
             ]);
-        $user3->assignRole('student');
+
+    $user3->assignRole('student');
+    StudentYear::create([
+        'student_id' => $user3->id,
+        'year_id' => 1,
+    ]);
     }
 }

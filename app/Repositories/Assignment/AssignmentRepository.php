@@ -3,12 +3,13 @@
 namespace App\Repositories\Assignment;
 
 use App\Models\User;
+use App\Models\Year;
 use App\Models\Assignment;
 use App\Models\Submission;
+use App\Models\StudentYear;
 use App\Models\YearSubject;
 use App\Models\TeacherSubject;
 use App\Models\AssignmentCategory;
-use App\Models\Year;
 use Illuminate\Support\Facades\DB;
 
 class AssignmentRepository implements AssignmentRepositoryInterface
@@ -182,4 +183,49 @@ class AssignmentRepository implements AssignmentRepositoryInterface
          'media'])
       ->findOrFail($id);
    }
-}
+
+   public function getAssignmentsByTeacherId()
+   {
+      $authUser = UserData()->id;
+      $user = User::find($authUser);
+      if(!$user || !$user->hasRole('teacher')){
+         ResponseMessage('You are not authorized to access', 401);
+      }
+      return Assignment::with(['assignmentCategory', 'subject', 'teacher', 'media', 'submissions.media'])
+      ->where('teacher_id', $user->id)
+      ->orderBy('id', 'desc')
+      ->paginate(config('common.list_count'))->map(function ($assignment){
+         $assignment->file_url = $assignment->getFirstMediaUrl('assignment');
+         $assignment->file_path = $assignment->getFirstMediaPath('assignment');
+         return $assignment;
+      });
+   }
+
+   public function getAssignmentsByStudentId()
+   {
+      $authUser = UserData()->id;
+      $user = User::find($authUser);
+      if(!$user || !$user->hasRole('student')){
+         ResponseMessage('You are not authorized to access', 401);
+      }
+
+      $studentYear = StudentYear::where('student_id', $user->id)->first();
+      if(!$studentYear){
+         ResponseMessage('Student year not found', 404);
+      }
+      $yearId = $studentYear->year_id;
+      $yearSubjects = YearSubject::where('year_id', $yearId)->get();
+      $subjectIds = $yearSubjects->pluck('subject_id')->toArray();
+      return Assignment::with(['assignmentCategory', 'subject', 'teacher', 'media', 'submissions.media'])
+      ->whereHas('subject', function ($query) use ($subjectIds) {
+         $query->whereIn('id', $subjectIds);
+      })
+      ->orderBy('created_at', 'asc')
+      ->paginate(config('common.list_count'));
+            // ->paginate(config('common.list_count'))->map(function ($assignment){
+      //    $assignment->file_url = $assignment->getFirstMediaUrl('assignment');
+      //    $assignment->file_path = $assignment->getFirstMediaPath('assignment');
+      //    return $assignment;
+      // });
+   }
+}  

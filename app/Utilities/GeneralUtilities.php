@@ -250,7 +250,6 @@ if (!function_exists('RemoveNullValues')) {
 if (!function_exists('UserData')) {
     function UserData()
     {
-        //return  auth('api')->user();
         return auth('sanctum')->user();
     }
 }

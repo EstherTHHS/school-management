@@ -7,13 +7,34 @@ use App\Models\Event;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Repositories\Event\EventRepositoryInterface;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class EventController extends Controller
+class EventController extends Controller implements HasMiddleware
 {
     private EventRepositoryInterface $eventRepository;
     public function __construct(EventRepositoryInterface $eventRepository)
     {
         $this->eventRepository = $eventRepository;
+    }
+
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:getEvents', only: ['getEvents']),
+            new Middleware('permission:getEventById', only: ['getEventById']),
+            new Middleware('permission:storeEvent', only: ['storeEvent']),
+            new Middleware('permission:deleteEventById', only: ['deleteEventById']),
+            new Middleware('permission:updateOrCreateLab', only: ['updateOrCreateLab']),
+            new Middleware('permission:getLabs', only: ['getLabs']),
+            new Middleware('permission:getLabById', only: ['getLabById']),
+            new Middleware('permission:deleteLabById', only: ['deleteLabById']),
+            new Middleware('permission:updateOrCreateTimetable', only: ['updateOrCreateTimetable']),
+            new Middleware('permission:getTimetablesByYearId', only: ['getTimetablesByYearId']),
+            new Middleware('permission:getTimetables', only: ['getTimetables']),
+            new Middleware('permission:getTimetableById', only: ['getTimetableById']),
+            new Middleware('permission:deleteTimetableById', only: ['deleteTimetableById']),
+        ];
     }
     public function getEvents(){
         $events = $this->eventRepository->getEvents();
