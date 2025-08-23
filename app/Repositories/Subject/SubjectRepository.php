@@ -9,12 +9,15 @@ use App\Models\YearSubject;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class SubjectRepository implements SubjectRepositoryInterface{
+class SubjectRepository implements SubjectRepositoryInterface
+{
 
-    public function getYears(){
+    public function getYears()
+    {
         return Year::all();
     }
-    public function getSubjects($request){
+    public function getSubjects($request)
+    {
         $subjects = Subject::query();
         if ($request->has('search')) {
             $subjects->where('name', 'like', '%' . $request->search . '%');
@@ -22,30 +25,38 @@ class SubjectRepository implements SubjectRepositoryInterface{
         }
         return $subjects->orderBy('id', 'desc')->get();
     }
-    public function getSubjectById($id){
+    public function getSubjectById($id)
+    {
         return Subject::find($id);
     }
-    public function storeSubject($data){
+    public function storeSubject($data)
+    {
         return Subject::create($data);
     }
-    public function updateSubjectById($id, $data){
+    public function updateSubjectById($id, $data)
+    {
         return Subject::find($id)->update($data);
     }
-    public function deleteSubjectById($id){
-        return Subject::find($id)->delete();
+    public function deleteSubjectById($id)
+    {
+        $subject = Subject::findOrFail($id);
+        return $subject->delete();
     }
 
-    public function toggleStatus($id){
-        $subject = Subject::find($id);
+    public function toggleStatus($id)
+    {
+        $subject = Subject::findOrFail($id);
+        $subject->delete();
         $subject->is_active = !$subject->is_active;
         return $subject->save();
     }
 
-    public function attachSubjectToYear($data){
+    public function attachSubjectToYear($data)
+    {
         DB::beginTransaction();
         try {
-            if(isset($data['subjects'])){
-                $subjects = json_decode($data['subjects'],true);
+            if (isset($data['subjects'])) {
+                $subjects = json_decode($data['subjects'], true);
                 if (json_last_error() !== JSON_ERROR_NONE) {
                     return ResponseMessage('Invalid JSON data provided for supplier phone.', 400);
                 }
@@ -53,20 +64,20 @@ class SubjectRepository implements SubjectRepositoryInterface{
             $attachedData = [];
             foreach ($subjects as $subject) {
                 $exists = YearSubject::where('year_id', $data['year_id'])
-                ->where('subject_id', $subject)
-                ->exists();
+                    ->where('subject_id', $subject)
+                    ->exists();
 
-            if ($exists) {
-                DB::rollBack(); 
-                ResponseMessage("Subject ID {$subject} is already attached to the year.", 409); 
-            }
-            $attachedData [] = YearSubject::firstOrCreate([
+                if ($exists) {
+                    DB::rollBack();
+                    ResponseMessage("Subject ID {$subject} is already attached to the year.", 409);
+                }
+                $attachedData[] = YearSubject::firstOrCreate([
                     'year_id' => $data['year_id'],
                     'subject_id' => $subject
                 ]);
             }
             DB::commit();
-            return  $attachedData ;
+            return  $attachedData;
         } catch (\Exception $e) {
             DB::rollback();
             ResponseMessage($e->getMessage(), 402);
@@ -78,21 +89,21 @@ class SubjectRepository implements SubjectRepositoryInterface{
     {
         DB::beginTransaction();
         try {
-            if(isset($data['year_subject_id'])){
-                $yearSubjectIds = json_decode($data['year_subject_id'],true);
+            if (isset($data['year_subject_id'])) {
+                $yearSubjectIds = json_decode($data['year_subject_id'], true);
                 if (json_last_error() !== JSON_ERROR_NONE) {
                     return ResponseMessage('Invalid JSON data provided for supplier phone.', 400);
                 }
             }
             $attachedData = [];
             foreach ($yearSubjectIds as $year_subject_id) {
-                $attachedData [] = TeacherSubject::firstOrCreate([
+                $attachedData[] = TeacherSubject::firstOrCreate([
                     'teacher_id' => $data['teacher_id'],
                     'year_subject_id' => $year_subject_id
                 ]);
             }
             DB::commit();
-            return  $attachedData ;
+            return  $attachedData;
         } catch (\Exception $e) {
             DB::rollback();
             ResponseMessage($e->getMessage(), 402);

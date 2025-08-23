@@ -51,7 +51,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/assignment-categories', 'getAssignmentCategories');
         Route::get('/assignment-categories/{id}', 'getAssignmentCategoryById');
         Route::get('/delete-assignment-file/{id}', 'deleteAssignmentFile');
-        
+
         Route::get('/years/{yearId}/subjects', 'getSubjectListByYearId');
 
         Route::post('/submissions', 'storeSubmission');
@@ -70,7 +70,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/labs/{id}', 'getLabById');
         Route::delete('/labs/{id}', 'deleteLabById');
 
-        Route::get('/timetables','getTimetables');
+        Route::get('/timetables', 'getTimetables');
         Route::post('/timetables',  'updateOrCreateTimetable');
         Route::get('/timetables/year/{yearId}', 'getTimetablesByYearId');
         Route::get('/timetables/{id}', 'getTimetableById');
