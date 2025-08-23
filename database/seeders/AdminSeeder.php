@@ -43,9 +43,5 @@ class AdminSeeder extends Seeder
             ]);
 
     $user3->assignRole('student');
-    StudentYear::create([
-        'student_id' => $user3->id,
-        'year_id' => 1,
-    ]);
     }
 }
