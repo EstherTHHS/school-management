@@ -10,6 +10,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 class Assignment extends Model implements HasMedia
 {
     use InteractsWithMedia;
+
     protected $fillable = [
         'assignment_category_id',
         'subject_id',
