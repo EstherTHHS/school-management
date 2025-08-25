@@ -32,7 +32,10 @@ class SubjectRepository implements SubjectRepositoryInterface
     public function storeSubject($data)
     {
         $yearId = $data['year_id'] ?? null;
+        $teacher_id = $data['teacher_id'] ?? null;
+
         unset($data['year_id']);
+        unset($data['teacher_id']);
 
         $subject = Subject::create($data);
 
@@ -40,12 +43,37 @@ class SubjectRepository implements SubjectRepositoryInterface
             $subject->years()->attach($yearId);
         }
 
+        if (isset($teacher_id)) {
+            $subject->teachers()->attach($teacher_id);
+        }
+
         return $subject;
     }
     public function updateSubjectById($id, $data)
     {
-        return Subject::find($id)->update($data);
+        $subject = Subject::findOrFail($id);
+
+        $yearIds = $data['year_id'] ?? [];
+        $teacherIds = $data['teacher_id'] ?? [];
+
+        unset($data['year_id'], $data['teacher_id']);
+
+        $subject->update($data);
+
+        if (!empty($yearIds)) {
+            $subject->years()->sync($yearIds);
+        } else {
+            $subject->years()->sync([]);
+        }
+
+        if (!empty($teacherIds)) {
+            $subject->teachers()->sync($teacherIds);
+        } else {
+            $subject->teachers()->sync([]);
+        }
+        return $subject;
     }
+
     public function deleteSubjectById($id)
     {
         $subject = Subject::findOrFail($id);
