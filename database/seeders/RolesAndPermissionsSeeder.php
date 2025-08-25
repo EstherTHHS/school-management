@@ -17,11 +17,79 @@ class RolesAndPermissionsSeeder extends Seeder
         $admin = Role::create(['name' => 'admin']);
         $teacher = Role::create(['name' => 'teacher']);
         $student = Role::create(['name' => 'student']);
+        $guest = Role::create(['name' => 'guest']);
+
+        //admin controller
         $adminList = Permission::create(['name' => 'adminList']);
         $adminCreate = Permission::create(['name' => 'adminCreate']);
-        // $adminList = Permission::create(['name' => 'adminList']);
-        // $adminList = Permission::create(['name' => 'adminList']);
+        $adminEdit = Permission::create(['name' => 'adminEdit']);
+        $adminUpdate = Permission::create(['name' => 'adminUpdate']);
+        $adminDelete = Permission::create(['name' => 'adminDelete']);
+        $adminStatus = Permission::create(['name' => 'adminStatus']);
+        $adminChangePassword = Permission::create(['name' => 'adminChangePassword']);
+        
+        //subject controller
+        $getYears = Permission::create(['name' => 'getYears']);
+        $getSubjects = Permission::create(['name' => 'getSubjects']);
+        $getSubjectById = Permission::create(['name' => 'getSubjectById']);
+        $storeSubject = Permission::create(['name' => 'storeSubject']);
+        $updateSubjectById = Permission::create(['name' => 'updateSubjectById']);
+        $deleteSubjectById = Permission::create(['name' => 'deleteSubjectById']);
+        $toggleStatus = Permission::create(['name' => 'toggleStatus']);
+        $attachSubjectToYear = Permission::create(['name' => 'attachSubjectToYear']);
+        $storeTeacherSubject = Permission::create(['name' => 'storeTeacherSubject']);
 
-        $admin->givePermissionTo([$adminList, $adminCreate]);
+
+        $admin->givePermissionTo(
+            [
+                $adminList,
+                $adminCreate,
+                $adminEdit,
+                $adminUpdate,
+                $adminDelete,
+                $adminStatus,
+                $adminChangePassword,
+                $getYears,
+                $getSubjects,
+                $getSubjectById,
+                $storeSubject,
+                $updateSubjectById,
+                $deleteSubjectById,
+                $toggleStatus,
+                $attachSubjectToYear,
+                $storeTeacherSubject,
+            ]
+        );
+
+        $teacher->givePermissionTo(
+            [
+                $adminList,
+                $adminChangePassword,
+                $getYears,
+                $getSubjects,
+                $getSubjectById,
+                $storeSubject,
+                $updateSubjectById,
+                $deleteSubjectById,
+                $toggleStatus,
+                $attachSubjectToYear,
+                $storeTeacherSubject,
+            ]
+        );
+
+        $student->givePermissionTo(
+            [
+                $adminChangePassword,
+                $getYears,
+                $getSubjects,
+            ]
+        );
+
+        $guest->givePermissionTo(
+            [
+                $getYears,
+                $getSubjects,
+            ]
+        );
     }
 }

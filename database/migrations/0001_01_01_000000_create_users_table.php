@@ -24,6 +24,7 @@ return new class extends Migration
             $table->boolean('is_active')->default(true);
             $table->string('image_path')->nullable();
             $table->string('image_url')->nullable();
+            $table->integer('enrollment_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

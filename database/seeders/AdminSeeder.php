@@ -19,7 +19,7 @@ class AdminSeeder extends Seeder
             'name' => 'Admin',
             'email' => 'john@example.com',
             'phone' => '0911',
-            'password' => Hash::make('1111'),
+            'password' => 'password',
             'is_active' => 1,
         ]);
 
@@ -28,7 +28,7 @@ class AdminSeeder extends Seeder
             'name' => 'teacher',
             'email' => 'teacher@example.com',
             'phone' => '0922',
-            'password' => Hash::make('2222'),
+            'password' => '2222',
             'is_active' => 1,
         ]);
         $user2->assignRole('teacher');
@@ -37,9 +37,9 @@ class AdminSeeder extends Seeder
             'name' => 'student',
             'email' => 'studnet@example.com',
             'phone' => '0933',
-            'password' => Hash::make('3333'),
+            'password' => Hash::make('password'),
             'is_active' => 1,
-        ]);
+            ]);
         $user3->assignRole('student');
     }
 }

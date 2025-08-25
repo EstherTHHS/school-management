@@ -2,17 +2,25 @@
 
 namespace App\Repositories\Admin;
 
-use App\Models\Admin;
 use App\Models\User;
+use App\Models\Admin;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Contracts\Role;
 use Spatie\Permission\Models\Role as ModelsRole;
 
 class AdminRepository implements AdminRepositoryInterface
 {
-    public function getAll()
+    public function getAll($request)
     {
-        return User::with('roles')->orderBy('id', 'desc')->get();
+        $query = User::with('roles')->orderBy('id', 'desc');
+        if ($request && $request->has('role') && !empty($request->role)) {
+            $query->whereHas('roles', function ($q) use ($request) {
+                $q->where('name', $request->role);
+            });
+        }
+        
+        return $query->paginate(config('common.list_count'));
     }
 
     public function getById($id)
@@ -28,7 +36,6 @@ class AdminRepository implements AdminRepositoryInterface
     {
         DB::beginTransaction();
         try {
-
             $user = User::create($data);
             $user->assignRole($data['role'] ?? 'admin');
             DB::commit();
