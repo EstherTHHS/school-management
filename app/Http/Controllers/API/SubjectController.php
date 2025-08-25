@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Repositories\Subject\SubjectRepositoryInterface;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+
 class SubjectController extends Controller
 {
     private SubjectRepositoryInterface $subjectRepository;

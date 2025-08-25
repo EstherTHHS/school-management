@@ -31,7 +31,16 @@ class SubjectRepository implements SubjectRepositoryInterface
     }
     public function storeSubject($data)
     {
-        return Subject::create($data);
+        $yearId = $data['year_id'] ?? null;
+        unset($data['year_id']);
+
+        $subject = Subject::create($data);
+
+        if (isset($yearId)) {
+            $subject->years()->attach($yearId);
+        }
+
+        return $subject;
     }
     public function updateSubjectById($id, $data)
     {
