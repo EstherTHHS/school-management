@@ -20,11 +20,11 @@ class EventRepository implements EventRepositoryInterface
         try {
             $uploadedFile = $data['file'] ?? null;
             $event = Event::updateOrCreate(['id' => $data['id'] ?? null], $data);
-            if($uploadedFile){
+            if ($uploadedFile) {
                 $event->clearMediaCollection('event');
                 $event->addMedia($uploadedFile)
-                ->usingName($uploadedFile->getClientOriginalName())
-                ->toMediaCollection('event');
+                    ->usingName($uploadedFile->getClientOriginalName())
+                    ->toMediaCollection('event');
             }
             DB::commit();
             return $event;
@@ -53,11 +53,11 @@ class EventRepository implements EventRepositoryInterface
         try {
             $uploadedFile = $data['file'] ?? null;
             $lab = Lab::updateOrCreate(['id' => $data['id'] ?? null], $data);
-            if($uploadedFile){
+            if ($uploadedFile) {
                 $lab->clearMediaCollection('lab');
                 $lab->addMedia($uploadedFile)
-                ->usingName($uploadedFile->getClientOriginalName())
-                ->toMediaCollection('lab');
+                    ->usingName($uploadedFile->getClientOriginalName())
+                    ->toMediaCollection('lab');
             }
             DB::commit();
             return $lab;

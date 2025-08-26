@@ -13,13 +13,13 @@ use App\Http\Controllers\API\AssignmentController;
 use App\Http\Controllers\API\AttendanceController;
 
 Route::post('/login', [AuthController::class, 'login']);
-Route::post('/users', [UserController::class, 'store']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
     Route::controller(UserController::class)->group(function () {
         Route::get('/users',  'index');
+        Route::post('/users', 'store');
         Route::get('/users/{id}',  'getById');
         Route::post('/users/{id}',  'update');
         Route::delete('/users/{id}',  'delete');
@@ -43,6 +43,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/teachers',  'getTeachers');
         Route::get('/students',  'getStudents');
         Route::get('/teacher-subjects/{teacher_id}',  'getTeacherYearSubjects');
+        Route::get('/assignments/teacher',  'getAssignmentsByTeacherId');
+        Route::get('/assignments/student',  'getAssignmentsByStudentId');
 
         Route::get('/assignments/{id}',  'getAssignmentById');
         Route::post('/assignment-categories', 'storeAssignmentCategory');
