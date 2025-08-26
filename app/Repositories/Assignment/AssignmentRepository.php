@@ -182,7 +182,6 @@ class AssignmentRepository implements AssignmentRepositoryInterface
         return $submission->paginate(config('common.list_count'));
     }
 
-<<<<<<< HEAD
     public function getSubmissionById($id)
     {
         return Submission::with(
@@ -199,65 +198,49 @@ class AssignmentRepository implements AssignmentRepositoryInterface
         )
             ->findOrFail($id);
     }
+
+    public function getAssignmentsByTeacherId()
+    {
+        $authUser = UserData()->id;
+        $user = User::find($authUser);
+        if (!$user || !$user->hasRole('teacher')) {
+            ResponseMessage('You are not authorized to access', 401);
+        }
+        return Assignment::with(['assignmentCategory', 'subject', 'teacher', 'media', 'submissions.media'])
+            ->where('teacher_id', $user->id)
+            ->orderBy('id', 'desc')
+            ->paginate(config('common.list_count'))->map(function ($assignment) {
+                $assignment->file_url = $assignment->getFirstMediaUrl('assignment');
+                $assignment->file_path = $assignment->getFirstMediaPath('assignment');
+                return $assignment;
+            });
+    }
+
+    public function getAssignmentsByStudentId()
+    {
+        $authUser = UserData()->id;
+        $user = User::find($authUser);
+        if (!$user || !$user->hasRole('student')) {
+            ResponseMessage('You are not authorized to access', 401);
+        }
+
+        $studentYear = StudentYear::where('student_id', $user->id)->first();
+        if (!$studentYear) {
+            ResponseMessage('Student year not found', 404);
+        }
+        $yearId = $studentYear->year_id;
+        $yearSubjects = YearSubject::where('year_id', $yearId)->get();
+        $subjectIds = $yearSubjects->pluck('subject_id')->toArray();
+        return Assignment::with(['assignmentCategory', 'subject', 'teacher', 'media', 'submissions.media'])
+            ->whereHas('subject', function ($query) use ($subjectIds) {
+                $query->whereIn('id', $subjectIds);
+            })
+            ->orderBy('created_at', 'asc')
+            ->paginate(config('common.list_count'));
+        // ->paginate(config('common.list_count'))->map(function ($assignment){
+        //    $assignment->file_url = $assignment->getFirstMediaUrl('assignment');
+        //    $assignment->file_path = $assignment->getFirstMediaPath('assignment');
+        //    return $assignment;
+        // });
+    }
 }
-=======
-   public function getSubmissionById($id)
-   {
-      return Submission::with(
-         ['assignment.assignmentCategory',
-         'assignment.subject',
-         'assignment.subject.years',
-         'student',
-         'gradedBy',
-         'assignment.teacher',
-         'assignment.media',
-         'media'])
-      ->findOrFail($id);
-   }
-
-   public function getAssignmentsByTeacherId()
-   {
-      $authUser = UserData()->id;
-      $user = User::find($authUser);
-      if(!$user || !$user->hasRole('teacher')){
-         ResponseMessage('You are not authorized to access', 401);
-      }
-      return Assignment::with(['assignmentCategory', 'subject', 'teacher', 'media', 'submissions.media'])
-      ->where('teacher_id', $user->id)
-      ->orderBy('id', 'desc')
-      ->paginate(config('common.list_count'))->map(function ($assignment){
-         $assignment->file_url = $assignment->getFirstMediaUrl('assignment');
-         $assignment->file_path = $assignment->getFirstMediaPath('assignment');
-         return $assignment;
-      });
-   }
-
-   public function getAssignmentsByStudentId()
-   {
-      $authUser = UserData()->id;
-      $user = User::find($authUser);
-      if(!$user || !$user->hasRole('student')){
-         ResponseMessage('You are not authorized to access', 401);
-      }
-
-      $studentYear = StudentYear::where('student_id', $user->id)->first();
-      if(!$studentYear){
-         ResponseMessage('Student year not found', 404);
-      }
-      $yearId = $studentYear->year_id;
-      $yearSubjects = YearSubject::where('year_id', $yearId)->get();
-      $subjectIds = $yearSubjects->pluck('subject_id')->toArray();
-      return Assignment::with(['assignmentCategory', 'subject', 'teacher', 'media', 'submissions.media'])
-      ->whereHas('subject', function ($query) use ($subjectIds) {
-         $query->whereIn('id', $subjectIds);
-      })
-      ->orderBy('created_at', 'asc')
-      ->paginate(config('common.list_count'));
-            // ->paginate(config('common.list_count'))->map(function ($assignment){
-      //    $assignment->file_url = $assignment->getFirstMediaUrl('assignment');
-      //    $assignment->file_path = $assignment->getFirstMediaPath('assignment');
-      //    return $assignment;
-      // });
-   }
-}  
->>>>>>> ca8402634154fa9596eb254bacf485f07c71cfbb
